@@ -1,0 +1,5 @@
+1/ add this flag:
+root@k3s-ubuntu:/home/k3s# cat /etc/dhcp/dhcpd.conf
+ignore-client-uids true;
+
+2/ systemctl restart isc-dhcp-server
