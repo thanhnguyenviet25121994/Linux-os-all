@@ -1,0 +1,27 @@
+***create new filesystem
+pvcreate /dev/sdX 
+vgcreate my_volume_group /dev/sdX
+lvcreate -L 20G -n my_logical_volume my_volume_group
+mkfs.xfs /dev/my_volume_group/my_logical_volume
+echo '/dev/my_volume_group/my_logical_volume /mnt/my_xfs_mount xfs defaults 0 0' | sudo tee -a /etc/fstab
+mount -a 
+
+
+*** extend filesystem
+pvcreate /dev/sda3
+vgdisplay | grep Name
+vgextend vg_vmware /dev/sda3 
+lvdisplay | grep Path
+lvextend -l +100%FREE /dev/vg_vmware/lv_root
+resize2fs /dev/vg_vmware/lv_root 
+
+*** remove filesystem and return a device to its original
+- cat /etc/fstab
+...
+/dev/CVOL/workspace            /data              ext4    defaults        0 0 # remove this from fstab
+
+- umount /data # /data is the mount point
+lvchange -an /dev/CVOL/workspace
+lvremove /dev/CVOL/workspace
+vgremove CVOL
+pvremove /dev/sda4
