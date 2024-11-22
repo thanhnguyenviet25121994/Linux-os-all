@@ -10,10 +10,10 @@ mount -a
 *** extend filesystem
 pvcreate /dev/sda3
 vgdisplay | grep Name
-vgextend vg_vmware /dev/sda3 
+vgextend ubuntu-vg /dev/sdc
 lvdisplay | grep Path
-lvextend -l +100%FREE /dev/vg_vmware/lv_root
-resize2fs /dev/vg_vmware/lv_root 
+lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+resize2fs /dev/ubuntu-vg/ubuntu-lv
 
 *** remove filesystem and return a device to its original
 - cat /etc/fstab
